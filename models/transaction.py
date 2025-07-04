@@ -48,7 +48,7 @@ class Transaction:
         type_emoji = "💸" if self.transaction_type.lower() == "расходы" else "💰"
         
         # Форматируем сумму для отображения
-        amount_display = f"{self.amount:,.2f} р.".replace('.', ',')
+        amount_display = f"{self.amount:,.2f} р."
         
         return f"{type_emoji} {self.date} | {amount_display} | {self.category}\n📝 {self.description}"
     
