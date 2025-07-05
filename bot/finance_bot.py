@@ -23,6 +23,7 @@ from bot.keyboards.main_keyboards import (
 )
 from bot.states.transaction_states import TransactionStates, MenuStates
 from models.transaction import Transaction
+from utils.access_checker import check_access
 
 
 class FinanceBot:
@@ -104,6 +105,15 @@ class FinanceBot:
     def send_welcome(self, message: Message):
         """Обработчик команд /start и /help"""
         try:
+            # Проверяем доступ пользователя
+            if not check_access(message):
+                self.bot.send_message(
+                    message.chat.id,
+                    "🚫 У вас нет доступа к этому боту.\n\n"
+                    "Для получения доступа обратитесь к администратору."
+                )
+                return
+            
             welcome_text = """
 🏦 *Добро пожаловать в Финансовый Бот!*
 
@@ -135,6 +145,15 @@ class FinanceBot:
     def show_main_menu(self, message: Message):
         """Показать главное меню"""
         try:
+            # Проверяем доступ пользователя
+            if not check_access(message):
+                self.bot.send_message(
+                    message.chat.id,
+                    "🚫 У вас нет доступа к этому боту.\n\n"
+                    "Для получения доступа обратитесь к администратору."
+                )
+                return
+            
             # Очищаем данные пользователя и состояния
             self.clear_user_data(message.from_user.id)
             
@@ -153,6 +172,11 @@ class FinanceBot:
     def handle_add_transaction(self, call: CallbackQuery):
         """Обработчик для добавления транзакции"""
         try:
+            # Проверяем доступ пользователя
+            if not check_access(call):
+                self.bot.answer_callback_query(call.id, "🚫 У вас нет доступа к этому боту.")
+                return
+            
             transaction_type = "расходы" if call.data == "add_expense" else "доходы"
             
             # Сохраняем тип транзакции
@@ -223,6 +247,15 @@ class FinanceBot:
     
     def handle_all_messages(self, message: Message):
         """Обработчик всех сообщений с проверкой состояний"""
+        # Проверяем доступ пользователя
+        if not check_access(message):
+            self.bot.send_message(
+                message.chat.id,
+                "🚫 У вас нет доступа к этому боту.\n\n"
+                "Для получения доступа обратитесь к администратору."
+            )
+            return
+        
         user_state = self.bot.get_state(message.from_user.id, message.chat.id)
         
         try:
@@ -487,6 +520,11 @@ class FinanceBot:
     def handle_show_stats(self, call: CallbackQuery):
         """Обработчик показа статистики"""
         try:
+            # Проверяем доступ пользователя
+            if not check_access(call):
+                self.bot.answer_callback_query(call.id, "🚫 У вас нет доступа к этому боту.")
+                return
+            
             self.bot.edit_message_text(
                 "📊 *Статистика*\n\nВыберите тип статистики:",
                 call.message.chat.id,
@@ -642,6 +680,11 @@ class FinanceBot:
     def handle_show_management(self, call: CallbackQuery):
         """Обработчик показа управления"""
         try:
+            # Проверяем доступ пользователя
+            if not check_access(call):
+                self.bot.answer_callback_query(call.id, "🚫 У вас нет доступа к этому боту.")
+                return
+            
             self.bot.edit_message_text(
                 "⚙️ *Управление ботом*\n\nВыберите действие:",
                 call.message.chat.id,
