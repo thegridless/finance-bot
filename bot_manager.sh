@@ -6,7 +6,7 @@
 # Настройки
 BOT_NAME="finance-bot"
 BOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VENV_PATH="$BOT_DIR/venv"
+VENV_PATH="$BOT_DIR/.venv"
 PYTHON_SCRIPT="$BOT_DIR/main.py"
 LOG_FILE="$BOT_DIR/logs/bot.log"
 
